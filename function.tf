@@ -1,10 +1,7 @@
-
-
 resource "aws_cloudwatch_log_group" "lambda_logs" {
   name              = "/aws/lambda/${local.function_name}"
-  retention_in_days = 14
+  retention_in_days = 1
 }
-
 
 
 resource "aws_lambda_function" "function" {
@@ -22,7 +19,10 @@ resource "aws_lambda_function" "function" {
 
   environment {
     variables = {
-      TFE_HMAC = local.hmac_path
+      TFE_HMAC    = local.hmac_path
+      RABBIT      = local.rabbit_base_path
+      RABBIT_X    = "aws.notification"
+      RABBIT_USER = "aws-notification"
     }
   }
 
@@ -46,6 +46,38 @@ data "archive_file" "function_package" {
 
 resource "aws_ssm_parameter" "notification_hmac" {
   name  = local.hmac_path
+  type  = "SecureString"
+  value = "changeme"
+
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
+}
+
+resource "aws_ssm_parameter" "rabbitmq_public" {
+  for_each = {
+    exchange = "aws.notification"
+    host     = "mq.srv.stwalkerster.net"
+    port     = "5671"
+    username = "aws-notification"
+    vhost    = "/"
+  }
+
+  name  = "${local.rabbit_base_path}/${each.key}"
+  type  = "String"
+  value = each.value
+
+  lifecycle {
+    ignore_changes = [
+      value
+    ]
+  }
+}
+
+resource "aws_ssm_parameter" "rabbitmq_password" {
+  name  = "${local.rabbit_base_path}/password"
   type  = "SecureString"
   value = "changeme"
 

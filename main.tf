@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 4.48"
     }
+    tfe = {
+      source = "hashicorp/tfe"
+      version = "0.40.0"
+    }
   }
 
   backend "s3" {
@@ -34,6 +38,19 @@ provider "aws" {
 }
 
 locals {
-  function_name = "terraform-cloud-webhook-receiver"
-  hmac_path     = "/TerraformWebhook/lambda/tfe_hmac"
+  function_name    = "terraform-cloud-webhook-receiver"
+  hmac_path        = "/TerraformWebhook/lambda/tfe_hmac"
+  rabbit_base_path = "/TerraformWebhook/lambda/rabbit"
+}
+
+resource "aws_dynamodb_table" "notification_store" {
+  name = "TerraformNotifications"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key = "request"
+
+  attribute {
+    name = "request"
+    type = "S"
+  }
+
 }

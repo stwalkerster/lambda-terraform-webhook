@@ -52,7 +52,19 @@ resource "aws_iam_policy" "lambda_policy" {
         Resource = [
           data.aws_kms_alias.ssm.target_key_arn
         ]
-      }
+      },
+      {
+        Sid    = "DynamoDB"
+        Effect = "Allow"
+        Action = [
+          "dynamodb:GetItem",
+          "dynamodb:PutItem",
+          "dynamodb:DeleteItem"
+        ]
+        Resource = [
+          aws_dynamodb_table.notification_store.arn
+        ]
+      },
     ]
   })
 }

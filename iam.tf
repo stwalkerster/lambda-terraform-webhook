@@ -2,10 +2,10 @@ resource "aws_iam_role" "lambda_exec_role" {
   name = "terraform-cloud-webhook-receiver"
 
   assume_role_policy = jsonencode({
-    Version = "2012-10-17"
+    Version   = "2012-10-17"
     Statement = [
       {
-        Action = ["sts:AssumeRole"]
+        Action    = ["sts:AssumeRole"]
         Principal = {
           Service = "lambda.amazonaws.com"
         }
@@ -21,9 +21,9 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_exec" {
 }
 
 resource "aws_iam_policy" "lambda_policy" {
-  name = "terraform-cloud-webhook-receiver"
+  name   = "terraform-cloud-webhook-receiver"
   policy = jsonencode({
-    Version = "2012-10-17"
+    Version   = "2012-10-17"
     Statement = [
       {
         Sid    = "CloudWatch"
@@ -38,17 +38,19 @@ resource "aws_iam_policy" "lambda_policy" {
         ]
       },
       {
-        Sid    = "ParameterStore"
-        Effect = "Allow"
-        Action = ["ssm:GetParameter"]
-        Resource = [
-          aws_ssm_parameter.notification_hmac.arn
-        ]
+        Sid      = "ParameterStore"
+        Effect   = "Allow"
+        Action   = ["ssm:GetParameter"]
+        Resource = flatten([
+          aws_ssm_parameter.notification_hmac.arn,
+          aws_ssm_parameter.rabbitmq_password.arn,
+          [for o in aws_ssm_parameter.rabbitmq_public : o.arn],
+        ])
       },
       {
-        Sid    = "ParameterStoreDecrypt"
-        Effect = "Allow"
-        Action = ["kms:Decrypt"]
+        Sid      = "ParameterStoreDecrypt"
+        Effect   = "Allow"
+        Action   = ["kms:Decrypt"]
         Resource = [
           data.aws_kms_alias.ssm.target_key_arn
         ]

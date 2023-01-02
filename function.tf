@@ -15,14 +15,14 @@ resource "aws_lambda_function" "function" {
 
   source_code_hash = filebase64sha256(data.archive_file.function_package.output_path)
 
-  layers = ["arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension-Arm64:2"]
+  layers = ["arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension-Arm64:2",
+  "arn:aws:lambda:eu-west-1:770693421928:layer:Klayers-p38-pika:3"
+  ]
 
   environment {
     variables = {
       TFE_HMAC    = local.hmac_path
-      RABBIT      = local.rabbit_base_path
-      RABBIT_X    = "aws.notification"
-      RABBIT_USER = "aws-notification"
+      RABBIT_BASE = local.rabbit_base_path
     }
   }
 

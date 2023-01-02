@@ -3,20 +3,25 @@ resource "aws_cloudwatch_log_group" "lambda_logs" {
   retention_in_days = 1
 }
 
+locals {
+  function_path = "${path.module}/dist/function.zip"
+}
+
 
 resource "aws_lambda_function" "function" {
   function_name = local.function_name
   role          = aws_iam_role.lambda_exec_role.arn
 
-  filename      = data.archive_file.function_package.output_path
+  filename      = local.function_path
   handler       = "main.handler"
   runtime       = "python3.8"
   architectures = ["arm64"]
 
-  source_code_hash = filebase64sha256(data.archive_file.function_package.output_path)
+  source_code_hash = filebase64sha256(local.function_path)
 
-  layers = ["arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension-Arm64:2",
-  "arn:aws:lambda:eu-west-1:770693421928:layer:Klayers-p38-pika:3"
+  layers = [
+    "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension-Arm64:2",
+    # "arn:aws:lambda:eu-west-1:770693421928:layer:Klayers-p38-pika:3"
   ]
 
   environment {
@@ -27,7 +32,7 @@ resource "aws_lambda_function" "function" {
   }
 
   depends_on = [
-    data.archive_file.function_package,
+    # data.archive_file.function_package,
     aws_cloudwatch_log_group.lambda_logs,
   ]
 }
@@ -38,11 +43,11 @@ resource "aws_lambda_function_url" "function" {
   function_name      = aws_lambda_function.function.function_name
 }
 
-data "archive_file" "function_package" {
-  type        = "zip"
-  source_file = "${path.module}/main.py"
-  output_path = "${path.module}/dist/function.zip"
-}
+#data "archive_file" "function_package" {
+#  type        = "zip"
+#  source_file = "${path.module}/main.py"
+#  output_path = local.function_path
+#}
 
 resource "aws_ssm_parameter" "notification_hmac" {
   name  = local.hmac_path

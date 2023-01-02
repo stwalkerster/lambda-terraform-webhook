@@ -6,6 +6,7 @@ import os
 import json
 import boto3
 import pika
+import ssl
 
 aws_session_token = os.environ.get('AWS_SESSION_TOKEN')
 rabbit_base_path = os.environ.get('RABBIT_BASE')

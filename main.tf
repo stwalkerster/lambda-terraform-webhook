@@ -5,11 +5,11 @@ terraform {
       version = "~> 4.48"
     }
     tfe = {
-      source = "hashicorp/tfe"
+      source  = "hashicorp/tfe"
       version = "0.40.0"
     }
     github = {
-      source = "integrations/github"
+      source  = "integrations/github"
       version = "5.12.0"
     }
   }
@@ -41,8 +41,6 @@ provider "aws" {
   }
 }
 
-locals {
-  function_name    = "terraform-cloud-webhook-receiver"
-  hmac_path        = "/TerraformWebhook/lambda/tfe_hmac"
-  rabbit_base_path = "/TerraformWebhook/lambda/rabbit"
+provider "github" {
+  token = var.github_token
 }

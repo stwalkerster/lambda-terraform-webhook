@@ -3,10 +3,6 @@ resource "aws_cloudwatch_log_group" "lambda_logs" {
   retention_in_days = 7
 }
 
-locals {
-  function_path = "${path.module}/dist/function.zip"
-}
-
 resource "aws_lambda_function" "function" {
   function_name = local.function_name
   role          = aws_iam_role.lambda_exec_role.arn

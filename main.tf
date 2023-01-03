@@ -8,6 +8,10 @@ terraform {
       source = "hashicorp/tfe"
       version = "0.40.0"
     }
+    github = {
+      source = "integrations/github"
+      version = "5.12.0"
+    }
   }
 
   backend "s3" {

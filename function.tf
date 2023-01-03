@@ -21,7 +21,6 @@ resource "aws_lambda_function" "function" {
 
   layers = [
     "arn:aws:lambda:eu-west-1:015030872274:layer:AWS-Parameters-and-Secrets-Lambda-Extension-Arm64:2",
-    # "arn:aws:lambda:eu-west-1:770693421928:layer:Klayers-p38-pika:3"
   ]
 
   environment {

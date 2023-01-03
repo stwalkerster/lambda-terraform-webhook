@@ -23,7 +23,7 @@ resource "tfe_notification_configuration" "acc_app" {
     "assessment:failed",
     # "assessment:check_failure", # bug?
   ]
-  url              = aws_lambda_function_url.function.function_url
+  url              = "${aws_lambda_function_url.function.function_url}?hdr=x-tfe-notification-signature&sig=sha512&prefix=&src=terraformcloud&dest=%23%23stwalkerster-development"
   workspace_id     = data.tfe_workspace.acc_app.id
   token = var.hmac
 }
@@ -43,7 +43,7 @@ resource "tfe_notification_configuration" "acc_oauth" {
     "assessment:failed",
     # "assessment:check_failure", # bug?
   ]
-  url              = aws_lambda_function_url.function.function_url
+  url              = "${aws_lambda_function_url.function.function_url}?hdr=x-tfe-notification-signature&sig=sha512&prefix=&src=terraformcloud&dest=%23%23stwalkerster-development"
   workspace_id     = data.tfe_workspace.acc_oauth.id
   token = var.hmac
 }

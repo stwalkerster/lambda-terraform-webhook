@@ -43,7 +43,7 @@ def rabbit(lambda_context):
     ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
     ssl_context.verify_mode = ssl.CERT_REQUIRED
     ssl_context.check_hostname = True
-    ssl_context.load_verify_locations("ISRG_Root_X1.crt")
+    ssl_context.load_verify_locations("broker_ca.crt")
 
     credentials = pika.PlainCredentials(params["username"], params["password"])
     connection_properties = {'connection_name': lambda_context.invoked_function_arn}

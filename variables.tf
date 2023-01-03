@@ -10,14 +10,16 @@ locals {
   github_url = "${aws_lambda_function_url.function.function_url}?${join("&", [for k, v in local.github_params: "${urlencode(k)}=${urlencode(v)}" ])}"
 
   tfe_params = {
-    hdr = "x-tfe-notification-signature", sig = "sha512", prefix = "", src = "terraformcloud", dest = var.notification_destination
+    hdr  = "x-tfe-notification-signature", sig = "sha512", prefix = "", src = "terraformcloud",
+    dest = var.notification_destination
   }
   tfe_url = "${aws_lambda_function_url.function.function_url}?${join("&", [for k, v in local.tfe_params: "${urlencode(k)}=${urlencode(v)}" ])}"
 }
 
 variable "notification_destination" {
-  type    = string
-  default = "##stwalkerster-development"
+  type        = string
+  description = "The routing key for the messages on RabbitMQ"
+  default     = "##stwalkerster-development"
 }
 
 variable "github_token" {

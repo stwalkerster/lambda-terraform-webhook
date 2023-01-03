@@ -5,7 +5,6 @@ import urllib.request
 import urllib.parse
 import os
 import json
-import boto3
 import pika
 import ssl
 
@@ -16,6 +15,7 @@ hmac_path = os.environ.get('TFE_HMAC')
 rabbit_channel = None
 rabbit_exchange = ""
 
+logging.basicConfig(format='[%(levelname)s] %(message)s', level=logging.DEBUG)
 
 def get_secret(path):
     safe_parameter = urllib.parse.quote(path, safe="")
@@ -92,17 +92,6 @@ def handler(event, context):
     if received_signature != calculated_signature:
         logging.error("Mismatched HMAC", received_signature, calculated_signature)
         return json.dumps(dict(statusCode=403, isBase64Encoded=False, body="Mismatched HMAC"))
-
-    logging.debug("Publishing to DynamoDB")
-
-    dynamodb = boto3.client('dynamodb')
-    item = {
-        'request': {'S': context.aws_request_id},
-        'body': {'S': event_body},
-        'src': {'S': event["queryStringParameters"]["src"]},
-        'dest': {'S': event["queryStringParameters"]["dest"]},
-    }
-    dynamodb.put_item(TableName='TerraformNotifications', Item=item)
 
     rabbit(context)
 

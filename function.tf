@@ -1,12 +1,11 @@
 resource "aws_cloudwatch_log_group" "lambda_logs" {
   name              = "/aws/lambda/${local.function_name}"
-  retention_in_days = 1
+  retention_in_days = 7
 }
 
 locals {
   function_path = "${path.module}/dist/function.zip"
 }
-
 
 resource "aws_lambda_function" "function" {
   function_name = local.function_name
@@ -31,7 +30,6 @@ resource "aws_lambda_function" "function" {
   }
 
   depends_on = [
-    # data.archive_file.function_package,
     aws_cloudwatch_log_group.lambda_logs,
   ]
 }
@@ -41,12 +39,6 @@ resource "aws_lambda_function_url" "function" {
   authorization_type = "NONE"
   function_name      = aws_lambda_function.function.function_name
 }
-
-#data "archive_file" "function_package" {
-#  type        = "zip"
-#  source_file = "${path.module}/main.py"
-#  output_path = local.function_path
-#}
 
 resource "aws_ssm_parameter" "notification_hmac" {
   name  = local.hmac_path

@@ -111,6 +111,6 @@ def handler(event, context):
         "hmac": calculated_signature,
         "timestamp": timestamp
     }
-    msg_props = pika.BasicProperties(content_type="application/json", headers=msg_headers)
+    msg_props = pika.BasicProperties(content_type="application/json", headers={**msg_headers, **event["headers"]})
     rabbit_channel.basic_publish(exchange=rabbit_exchange, routing_key=event["queryStringParameters"]["dest"],
                                  body=event_body, properties=msg_props)

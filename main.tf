@@ -28,7 +28,6 @@ provider "aws" {
     tags = {
       Terraform   = "yes"
       Project     = "TerraformWebhook"
-      Environment = "Sandbox"
     }
   }
 }

@@ -11,8 +11,8 @@ resource "tfe_notification_configuration" "tfe" {
     "run:applying",
     "run:completed",
     "run:errored",
-    "assessment:drifted",
-    "assessment:failed",
+    # "assessment:drifted",
+    # "assessment:failed",
     # "assessment:check_failure", # bug?
   ]
   url          = local.tfe_url

@@ -8,14 +8,10 @@ There's probably a *lot* that's hard-coded to my usecase here, so while you shou
 it may not work out-of-the-box.
 
 ## Installation
-Create a GitHub personal access token with access to edit webhooks.
-
-Create `secrets.auto.tfvars` and inside define the variables `hmac` and `github_token`. The former should be the shared
+Create `secrets.auto.tfvars` and inside define the variable `hmac`, which should be the shared
 secret between TFE and this function.
 
-Log in to TFE (`terraform login`).
-
-Modify the variables `notification_destination`, `tfe_workspaces`, and `github_repositories` to suit your requirements.
+Modify the variables `notification_destination` to suit your requirements. This is used as the routing key in RabbitMQ
 You probably want to do this in another `*.auto.tfvars` file.
 
 ```shell

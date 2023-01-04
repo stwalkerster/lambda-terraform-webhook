@@ -22,27 +22,7 @@ variable "notification_destination" {
   default     = "##stwalkerster-development"
 }
 
-variable "github_token" {
-  type      = string
-  sensitive = true
-}
-
 variable "hmac" {
   type      = string
   sensitive = true
-}
-
-variable "tfe_workspaces" {
-  type    = set(string)
-  default = [
-    "enwikipedia-acc/oauth",
-    "enwikipedia-acc/application",
-  ]
-}
-
-variable "github_repositories" {
-  type    = set(string)
-  default = [
-    "sandbox",
-  ]
 }

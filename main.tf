@@ -4,14 +4,6 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 4.48"
     }
-    tfe = {
-      source  = "hashicorp/tfe"
-      version = "0.40.0"
-    }
-    github = {
-      source  = "integrations/github"
-      version = "5.12.0"
-    }
   }
 
   backend "s3" {
@@ -39,8 +31,4 @@ provider "aws" {
       Environment = "Sandbox"
     }
   }
-}
-
-provider "github" {
-  token = var.github_token
 }

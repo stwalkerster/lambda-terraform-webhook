@@ -16,6 +16,14 @@ locals {
   tfe_url = "${aws_lambda_function_url.function.function_url}?${join("&", [for k, v in local.tfe_params: "${urlencode(k)}=${urlencode(v)}" ])}"
 }
 
+variable "role_arn" {
+  description = "The role for Terraform to assume"
+  type    = map(string)
+  default = {
+    default = null
+  }
+}
+
 variable "notification_destination" {
   type        = string
   description = "The routing key for the messages on RabbitMQ"

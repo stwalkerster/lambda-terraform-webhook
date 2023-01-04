@@ -21,7 +21,7 @@ provider "aws" {
   region = "eu-west-1"
 
   assume_role {
-    role_arn = "arn:aws:iam::265088867231:role/OrganizationAccountAccessRole"
+    role_arn = var.role_arn[terraform.workspace]
   }
 
   default_tags {

@@ -11,7 +11,7 @@ locals {
 
   tfe_params = {
     hdr  = "x-tfe-notification-signature", sig = "sha512", prefix = "", src = "terraformcloud",
-    dest = var.notification_destination
+    dest = "#wikipedia-en-accounts-devs"
   }
   tfe_url = "${aws_lambda_function_url.function.function_url}?${join("&", [for k, v in local.tfe_params: "${urlencode(k)}=${urlencode(v)}" ])}"
 }

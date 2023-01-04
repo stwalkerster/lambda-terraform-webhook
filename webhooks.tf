@@ -1,7 +1,7 @@
 resource "tfe_notification_configuration" "tfe" {
   for_each = toset([for x in data.tfe_workspace.tfe : x.id])
 
-  name             = "stw lambda"
+  name             = "Helpmebot via AWS Lambda/RabbitMQ"
   enabled          = true
   destination_type = "generic"
   triggers         = [

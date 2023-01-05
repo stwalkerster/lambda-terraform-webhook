@@ -5,7 +5,7 @@ locals {
   function_path    = "${path.module}/dist/function.zip"
 
   github_params = {
-    hdr = "x-hub-signature-256", sig = "sha256", prefix = "sha256-", src = "github", dest = var.notification_destination
+    hdr = "x-hub-signature-256", sig = "sha256", prefix = "sha256=", src = "github", dest = var.notification_destination
   }
   github_url = "${aws_lambda_function_url.function.function_url}?${join("&", [for k, v in local.github_params: "${urlencode(k)}=${urlencode(v)}" ])}"
 
